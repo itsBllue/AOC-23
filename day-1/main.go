@@ -12,7 +12,6 @@ import (
 func getIntsFromString(s string) (int, error) {
 
 	var numbers []int
-	// println(s)
 
 	for _, char := range s {
 		// println(char)
@@ -43,9 +42,6 @@ func main() {
 
 	defer inputFile.Close()
 
-	// intsFromLine, err := getIntsFromString("eight8fivexsbkzcthree")
-
-	// fmt.Println(intsFromLine)
 	scanner := bufio.NewScanner(inputFile)
 	total := 0
 	i := 0
@@ -58,18 +54,9 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		// fmt.Println(intsFromLine)
-
 	}
 	fmt.Println(total)
 	log.SetFlags(0)
 	log.SetPrefix("Hello!\n")
-	// fmt.Println(string(content))
 
-	// message, err := getHelloMessage("Gopher")
-	// if err != nil {
-	// log.Fatal(err)
-	// }
-	// fmt.Println(message)
 }
