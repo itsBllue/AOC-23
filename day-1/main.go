@@ -6,31 +6,41 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"unicode"
+	"strings"
 )
 
-func getIntsFromString(s string) (int, error) {
+func extractDigitsAndSpeltStrings(str string) []int {
 
-	var numbers []int
+	// this is the map that will be used to convert the spelled out numbers to digits
+	spellingMap := map[string]int{
+		"one":   1,
+		"two":   2,
+		"three": 3,
+		"four":  4,
+		"five":  5,
+		"six":   6,
+		"seven": 7,
+		"eight": 8,
+		"nine":  9,
+	}
 
-	for _, char := range s {
-		// println(char)
-		if unicode.IsDigit(char) {
-			digit := int(char - '0')
-			numbers = append(numbers, digit)
+	digits := []int{}
+	for i, char := range str {
+		// convert to unicode and try to convert to int ( this will  store the number into the array)
+		if digit, err := strconv.Atoi(string(char)); err == nil {
+			digits = append(digits, digit)
+		} else {
+			// if the character is not a number, then try to match it to the spelling map
+			for spelling, number := range spellingMap {
+				if strings.HasPrefix(str[i:], spelling) {
+					digits = append(digits, number)
+					break
+				}
+			}
 		}
 	}
 
-	if len(numbers) < 2 {
-		numbers = append(numbers, numbers[0])
-	}
-
-	conc_strr := strconv.Itoa(numbers[0]) + strconv.Itoa(numbers[len(numbers)-1])
-	intToReturn, err := strconv.Atoi(conc_strr)
-	if err != nil {
-		return 0, err
-	}
-	return intToReturn, nil
+	return digits
 }
 
 func main() {
@@ -47,15 +57,14 @@ func main() {
 	i := 0
 	for scanner.Scan() {
 		i = i + 1
-		fmt.Println(scanner.Text())
-
-		intsFromLine, err := getIntsFromString(scanner.Text())
-		total += intsFromLine
-		if err != nil {
-			log.Fatal(err)
-		}
+		// // fmt.Println(scanner.Text())
+		var intArray = extractDigitsAndSpeltStrings(scanner.Text())
+		combineFirstLast, _ := strconv.Atoi(strconv.Itoa(intArray[0]) + strconv.Itoa(intArray[len(intArray)-1]))
+		total += combineFirstLast
 	}
+	// fmt.Println("total:", total)
 	fmt.Println(total)
+
 	log.SetFlags(0)
 	log.SetPrefix("Hello!\n")
 
